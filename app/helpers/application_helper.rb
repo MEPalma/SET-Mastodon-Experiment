@@ -182,7 +182,7 @@ module ApplicationHelper
   end
 
   def attach_tracking_logic
-    content_tag(:script, nil, src: ENV[SET_SERVICE_URL])
+    content_tag(:script, nil, src: ENV['SET_SERVICE_URL'])
   end
 
   def render_initial_state
