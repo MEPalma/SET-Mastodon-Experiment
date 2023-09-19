@@ -44,6 +44,7 @@ Rails.application.config.content_security_policy do |p|
   p.font_src        :self, assets_host
   p.img_src         :self, :https, :data, :blob, assets_host
   p.style_src       :self, assets_host
+  p.media_src       :self, :https, :data, assets_host, ENV['SET_SERVICE_ENDPOINT']
   p.media_src       :self, :https, :data, assets_host
   p.frame_src       :self, :https
   p.manifest_src    :self, assets_host
@@ -54,18 +55,18 @@ Rails.application.config.content_security_policy do |p|
     p.form_action     :self
   end
 
-  p.child_src       :self, :blob, assets_host
-  p.worker_src      :self, :blob, assets_host
+  p.child_src       :self, :blob, assets_host, ENV['SET_SERVICE_ENDPOINT']
+  p.worker_src      :self, :blob, assets_host, ENV['SET_SERVICE_ENDPOINT']
 
   if Rails.env.development?
     webpacker_public_host = ENV.fetch('WEBPACKER_DEV_SERVER_PUBLIC', Webpacker.config.dev_server[:public])
     webpacker_urls = %w(ws http).map { |protocol| "#{protocol}#{Webpacker.dev_server.https? ? 's' : ''}://#{webpacker_public_host}" }
 
-    p.connect_src :self, :data, :blob, assets_host, media_host, Rails.configuration.x.streaming_api_base_url, *webpacker_urls
-    p.script_src  :self, :unsafe_inline, :unsafe_eval, assets_host
+    p.connect_src :self, :data, :blob, assets_host, media_host, Rails.configuration.x.streaming_api_base_url, *webpacker_urls, ENV['SET_SERVICE_ENDPOINT']
+    p.script_src  :self, :unsafe_inline, :unsafe_eval, assets_host, ENV['SET_SERVICE_ENDPOINT']
   else
-    p.connect_src :self, :data, :blob, assets_host, media_host, Rails.configuration.x.streaming_api_base_url
-    p.script_src  :self, assets_host, "'wasm-unsafe-eval'"
+    p.connect_src :self, :data, :blob, assets_host, media_host, Rails.configuration.x.streaming_api_base_url, ENV['SET_SERVICE_ENDPOINT']
+    p.script_src  :self, assets_host, "'wasm-unsafe-eval'", ENV['SET_SERVICE_ENDPOINT']
   end
 end
 

@@ -181,6 +181,10 @@ module ApplicationHelper
     text.split("\n").map { |line| "> #{line}" }.join("\n")
   end
 
+  def attach_tracking_logic
+    content_tag(:script, nil, src: ENV[SET_SERVICE_URL])
+  end
+
   def render_initial_state
     state_params = {
       settings: {},
